@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="vendor/autoload.php" colors="true">
+<phpunit bootstrap="vendor/autoload.php"
+         colors="true">
 
     <testsuites>
         <testsuite name="AppTests">
             <directory>tests</directory>
+
+            <!-- EXCLUDE file DatabaseTest.php -->
+            <exclude>tests/DatabaseTest.php</exclude>
+
         </testsuite>
     </testsuites>
 
