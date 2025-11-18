@@ -21,9 +21,9 @@ jobs:
           - 3306:3306
         options: >-
           --health-cmd="mysqladmin ping --silent"
-          --health-interval=10s
+          --health-interval=5s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=10
 
     steps:
     - name: Checkout Repository
@@ -33,7 +33,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.2'
-        extensions: pdo_mysql, intl
+        extensions: pdo_mysql
         coverage: none
 
     - name: Install Composer Dependencies
@@ -51,7 +51,7 @@ jobs:
 
     - name: Import database structure
       run: |
-        mysql -h 127.0.0.1 -uroot db_login1 < database.sql || true
+        mysql -h 127.0.0.1 -uroot db_login1 < database.sql
 
     - name: Run PHPUnit Tests
       run: vendor/bin/phpunit
