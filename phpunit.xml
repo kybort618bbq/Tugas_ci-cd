@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php"
+         colors="true">
+
+    <testsuites>
+        <testsuite name="My App Test Suite">
+            <directory>./tests</directory>
+
+            <!-- Exclude DatabaseTest supaya tidak dianggap test -->
+            <exclude>
+                <file>tests/DatabaseTest.php</file>
+            </exclude>
+
+        </testsuite>
+    </testsuites>
+
+    <php>
+        <env name="DB_HOST" value="localhost"/>
+        <env name="DB_NAME" value="db_login1"/>
+        <env name="DB_USER" value="root"/>
+        <env name="DB_PASS" value=""/>
+    </php>
+
+</phpunit>

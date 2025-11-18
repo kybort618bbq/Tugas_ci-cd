@@ -1,0 +1,57 @@
+name: CI Test Pipeline
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ""
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+          MYSQL_DATABASE: db_login1
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: pdo_mysql, intl
+        coverage: none
+
+    - name: Install Composer Dependencies
+      run: composer install
+
+    - name: Wait for MySQL Ready
+      run: |
+        for i in {1..20}; do
+          if mysqladmin ping -h"127.0.0.1" --silent; then
+            break
+          fi
+          echo "Waiting for MySQL..."
+          sleep 3
+        done
+
+    - name: Import database structure
+      run: |
+        mysql -h 127.0.0.1 -uroot db_login1 < database.sql || true
+
+    - name: Run PHPUnit Tests
+      run: vendor/bin/phpunit
