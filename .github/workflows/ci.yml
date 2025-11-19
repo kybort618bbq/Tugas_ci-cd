@@ -51,7 +51,7 @@ jobs:
 
     - name: Import database structure
       run: |
-        mysql -h 127.0.0.1 -uroot db_login1 < database.sql
+        mysql -h 127.0.0.1 -uroot db_login1 < ./database.sql
 
     - name: Run PHPUnit Tests
       run: vendor/bin/phpunit
